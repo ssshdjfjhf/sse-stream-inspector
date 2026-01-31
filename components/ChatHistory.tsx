@@ -28,14 +28,14 @@ const PartRenderer: React.FC<{ part: ClaudePart; role: string }> = ({ part, role
       return (
         <details className="mb-4 bg-amber-50/50 border border-amber-100 rounded-lg overflow-hidden group">
           <summary className="px-4 py-2 text-[10px] font-bold text-amber-700 uppercase tracking-widest cursor-pointer hover:bg-amber-100/50 transition-colors flex items-center justify-between">
-            <span>Assistant Thinking Process</span>
+            <span>助手思考过程</span>
             <svg className="w-3 h-3 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 9l-7 7-7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </summary>
           <div className="px-4 py-3 text-sm text-amber-900/80 italic whitespace-pre-wrap leading-relaxed border-t border-amber-100">
             {part.thinking}
             {part.signature && (
               <div className="mt-2 pt-2 border-t border-amber-200/50 text-[10px] mono opacity-50 truncate">
-                SIG: {part.signature}
+                签名: {part.signature}
               </div>
             )}
           </div>
@@ -46,7 +46,7 @@ const PartRenderer: React.FC<{ part: ClaudePart; role: string }> = ({ part, role
       return (
         <div className="mb-4 bg-indigo-50 border border-indigo-100 rounded-lg overflow-hidden">
           <div className="px-4 py-2 bg-indigo-100/50 border-b border-indigo-100 flex items-center justify-between">
-            <span className="text-[10px] font-bold text-indigo-700 uppercase tracking-widest">Tool Call: {part.name}</span>
+            <span className="text-[10px] font-bold text-indigo-700 uppercase tracking-widest">工具调用: {part.name}</span>
             <span className="text-[10px] mono text-indigo-400">{part.id}</span>
           </div>
           <div className="p-3 bg-slate-900">
@@ -61,7 +61,7 @@ const PartRenderer: React.FC<{ part: ClaudePart; role: string }> = ({ part, role
       return (
         <div className={`mb-4 border rounded-lg overflow-hidden ${part.is_error ? 'bg-red-50 border-red-100' : 'bg-emerald-50 border-emerald-100'}`}>
           <div className={`px-4 py-2 border-b flex items-center justify-between ${part.is_error ? 'bg-red-100/50 border-red-100 text-red-700' : 'bg-emerald-100/50 border-emerald-100 text-emerald-700'}`}>
-            <span className="text-[10px] font-bold uppercase tracking-widest">Tool Result</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest">工具结果</span>
             <span className="text-[10px] mono opacity-50">{part.tool_use_id}</span>
           </div>
           <div className="p-4 overflow-x-auto">
@@ -74,7 +74,7 @@ const PartRenderer: React.FC<{ part: ClaudePart; role: string }> = ({ part, role
 
     default:
       return (
-        <div className="text-xs text-slate-400 italic mb-2">Unknown part type: {part.type}</div>
+        <div className="text-xs text-slate-400 italic mb-2">未知部分类型: {part.type}</div>
       );
   }
 };
@@ -85,16 +85,16 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ history }) => {
       {/* Metadata Header */}
       <div className="flex flex-wrap gap-4 items-center justify-between p-4 bg-white border border-slate-200 rounded-2xl shadow-sm">
         <div>
-          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Active Model</div>
+          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">当前模型</div>
           <div className="text-sm font-bold text-indigo-600 mono">{history.model}</div>
         </div>
         <div className="flex gap-4">
           <div className="text-center px-4 border-r border-slate-100 last:border-0">
-            <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Turns</div>
+            <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">对话轮数</div>
             <div className="text-sm font-bold text-slate-700">{history.messages.length}</div>
           </div>
           <div className="text-center px-4 border-r border-slate-100 last:border-0">
-            <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Tools</div>
+            <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">工具数量</div>
             <div className="text-sm font-bold text-slate-700">{history.tools?.length || 0}</div>
           </div>
         </div>
@@ -113,13 +113,17 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ history }) => {
                 msg.role === 'assistant' ? 'text-indigo-500' : 'text-slate-400'
               }`}>
                 <span className="w-2 h-2 rounded-full bg-current"></span>
-                {msg.role}
+                {msg.role === 'assistant' ? '助手' : '用户'}
               </div>
               
               <div>
-                {msg.content.map((part, pIdx) => (
-                  <PartRenderer key={pIdx} part={part} role={msg.role} />
-                ))}
+                {Array.isArray(msg.content) ? (
+                  msg.content.map((part, pIdx) => (
+                    <PartRenderer key={pIdx} part={part} role={msg.role} />
+                  ))
+                ) : (
+                  <div className="text-sm text-slate-800 whitespace-pre-wrap">{String(msg.content)}</div>
+                )}
               </div>
             </div>
           </div>
@@ -130,25 +134,25 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ history }) => {
       <div className="space-y-6">
         <details className="group border-t border-slate-200 pt-8">
           <summary className="flex items-center justify-between cursor-pointer list-none">
-            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">System Instructions ({history.system?.length || 0} Blocks)</h3>
+            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">系统指令 ({history.system?.length || 0} 个块)</h3>
             <svg className="w-4 h-4 text-slate-300 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 9l-7 7-7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </summary>
           <div className="space-y-3 mt-4">
              {history.system?.map((item: any, i: number) => (
                <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-600 leading-relaxed shadow-sm">
-                 <div className="text-[9px] font-bold text-slate-400 uppercase mb-2">Block {i+1} ({item.type})</div>
+                 <div className="text-[9px] font-bold text-slate-400 uppercase mb-2">块 {i+1} ({item.type})</div>
                  <div className="whitespace-pre-wrap">{item.text || JSON.stringify(item)}</div>
                </div>
              ))}
              {(!history.system || history.system.length === 0) && (
-               <div className="text-sm text-slate-400 italic">No system instructions provided.</div>
+               <div className="text-sm text-slate-400 italic">未提供系统指令。</div>
              )}
           </div>
         </details>
 
         <details className="group border-t border-slate-200 pt-8">
           <summary className="flex items-center justify-between cursor-pointer list-none">
-            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Available Tools ({history.tools?.length || 0})</h3>
+            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">可用工具 ({history.tools?.length || 0})</h3>
             <svg className="w-4 h-4 text-slate-300 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M19 9l-7 7-7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </summary>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -163,7 +167,7 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ history }) => {
                  </div>
                  {tool.input_schema && (
                    <details className="mt-3">
-                     <summary className="text-[9px] font-bold text-slate-400 uppercase cursor-pointer hover:text-indigo-500">View Details & Schema</summary>
+                     <summary className="text-[9px] font-bold text-slate-400 uppercase cursor-pointer hover:text-indigo-500">查看详情和架构</summary>
                      <div className="mt-2 text-[11px] text-slate-600 mb-2">{tool.description}</div>
                      <div className="mt-2 bg-slate-50 rounded p-2 overflow-x-auto">
                        <pre className="text-[10px] mono text-slate-600">{JSON.stringify(tool.input_schema, null, 2)}</pre>
@@ -173,7 +177,7 @@ const ChatHistory: React.FC<ChatHistoryProps> = ({ history }) => {
                </div>
              ))}
              {(!history.tools || history.tools.length === 0) && (
-               <div className="text-sm text-slate-400 italic col-span-2">No tools defined in this session.</div>
+               <div className="text-sm text-slate-400 italic col-span-2">此会话中未定义工具。</div>
              )}
           </div>
         </details>

@@ -120,8 +120,8 @@ const App: React.FC = () => {
             </svg>
           </div>
           <div>
-            <h1 className="text-lg font-bold text-slate-800">Claude Protocol Inspector</h1>
-            <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Teaching Tool for AI Dialogue Analysis</p>
+            <h1 className="text-lg font-bold text-slate-800">Claude 协议检查器</h1>
+            <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">AI 对话分析教学工具</p>
           </div>
         </div>
         
@@ -130,19 +130,19 @@ const App: React.FC = () => {
             onClick={() => setInputText(EXAMPLE_SSE)}
             className="px-4 py-2 text-xs font-semibold text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors border border-indigo-100"
           >
-            Load SSE Example
+            加载 SSE 示例
           </button>
           <button 
             onClick={() => setInputText(EXAMPLE_HTTP)}
             className="px-4 py-2 text-xs font-semibold text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors border border-emerald-100"
           >
-            Load Dialogue Example
+            加载对话示例
           </button>
           <button 
             onClick={() => { setInputText(''); setEvents([]); setChatHistory(null); }}
             className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50 rounded-lg transition-colors border border-slate-200"
           >
-            Clear
+            清空
           </button>
         </div>
       </header>
@@ -152,15 +152,15 @@ const App: React.FC = () => {
         <div className="w-full md:w-1/3 flex flex-col border-r border-slate-200 h-[calc(100vh-73px)]">
           <div className="p-4 bg-slate-50 border-b border-slate-200">
             <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex justify-between items-center">
-              <span>RAW DATA INPUT</span>
+              <span>原始数据输入</span>
               <span className={`px-2 py-0.5 rounded ${viewMode === 'sse' ? 'bg-indigo-100 text-indigo-600' : 'bg-emerald-100 text-emerald-600'}`}>
-                Detected: {viewMode.toUpperCase()}
+                检测到: {viewMode.toUpperCase()}
               </span>
             </div>
             <textarea 
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Paste SSE text stream OR Claude Dialogue JSON..."
+              placeholder="粘贴 SSE 文本流或 Claude 对话 JSON..." 
               className="w-full h-48 p-4 bg-white border border-slate-200 rounded-xl shadow-inner focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-[10px] mono resize-none"
             />
           </div>
@@ -169,7 +169,7 @@ const App: React.FC = () => {
             {viewMode === 'sse' ? (
               <>
                 <div className="px-4 py-3 bg-white border-b border-slate-200">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Event Sequence ({events.length})</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">事件序列 ({events.length})</span>
                 </div>
                 <div className="flex-1 overflow-y-auto bg-white">
                   {events.map((ev) => <EventItem key={ev.id} event={ev} />)}
@@ -180,8 +180,8 @@ const App: React.FC = () => {
                 <div className="w-16 h-16 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-600">
                   <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </div>
-                <h3 className="font-bold text-slate-700">Dialogue Mode Active</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">Direct conversation history detected.<br/>Visualizing the full turn sequence on the right.</p>
+                <h3 className="font-bold text-slate-700">对话模式已激活</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">检测到直接对话历史记录。<br/>在右侧可视化完整的对话序列。</p>
               </div>
             )}
           </div>
@@ -190,7 +190,7 @@ const App: React.FC = () => {
         {/* View Pane */}
         <div className="w-full md:w-2/3 flex flex-col h-[calc(100vh-73px)] bg-slate-50">
           <div className="px-6 py-4 bg-white border-b border-slate-200 flex items-center justify-between shadow-sm z-[5]">
-             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Visual Reconstruction</span>
+             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">可视化重建</span>
           </div>
           <div className="flex-1 overflow-y-auto p-8 scroll-smooth">
             {viewMode === 'sse' ? (
