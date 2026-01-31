@@ -2,19 +2,139 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# Claude 协议检查器 (Claude Protocol Inspector)
 
-This contains everything you need to run your app locally.
+一个强大的开发者工具，用于解析、可视化和重建 Server-Sent Events (SSE) 流，专门针对 Claude 风格的模型输出进行了优化，包括思考块和工具调用。
 
-View your app in AI Studio: https://ai.studio/apps/drive/1pcBKUAXs0eTHvqKtj8Y5bc_wrvrbhY55
+## 主要功能
 
-## Run Locally
+### 🔍 SSE 流解析
+- 解析原始的 SSE (Server-Sent Events) 数据流
+- 自动识别和提取事件序列
+- 支持 HTTP 头部信息解析
 
-**Prerequisites:**  Node.js
+### 💬 对话历史可视化
+- 支持 Claude 对话 JSON 格式直接解析
+- 以聊天界面形式展示完整的对话轮次
+- 区分用户和助手消息
 
+### 🧠 思考过程展示
+- 显示 Claude 的思考块 (thinking block) 内容
+- 支持签名验证信息显示
+- 可折叠/展开思考过程
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### 🛠️ 工具调用分析
+- 展示工具调用的名称和参数
+- 显示工具执行结果
+- 错误状态可视化
+
+### 📊 Token 使用统计
+- 输入 Token 数量
+- 输出 Token 数量
+- 缓存读取/写入 Token 统计
+
+## 技术栈
+
+- **前端框架**: React 19 + TypeScript
+- **构建工具**: Vite 6
+- **样式**: Tailwind CSS
+- **图标**: Heroicons
+
+## 本地运行
+
+### 环境要求
+- Node.js (推荐 18+)
+
+### 安装步骤
+
+1. 克隆仓库:
+```bash
+git clone https://github.com/ssshdjfjhf/sse-stream-inspector.git
+cd sse-stream-inspector
+```
+
+2. 安装依赖:
+```bash
+npm install
+```
+
+3. 运行开发服务器:
+```bash
+npm run dev
+```
+
+4. 在浏览器中打开 http://localhost:3000
+
+## 使用说明
+
+### 输入数据格式
+
+#### 1. SSE 流格式
+粘贴原始的 SSE 流数据，例如：
+```
+event: message_start
+data: {"type":"message_start","message":{...}}
+
+event: content_block_delta
+data: {"type":"content_block_delta","index":0,"delta":{...}}
+```
+
+#### 2. Claude 对话 JSON 格式
+粘贴完整的对话历史 JSON：
+```json
+{
+  "model": "claude-haiku-4-5-20251001",
+  "messages": [
+    {
+      "role": "user",
+      "content": [{"type": "text", "text": "你好"}]
+    },
+    {
+      "role": "assistant",
+      "content": [...]
+    }
+  ]
+}
+```
+
+### 界面操作
+
+- **加载 SSE 示例**: 加载预设的 SSE 流示例数据
+- **加载对话示例**: 加载预设的对话历史示例
+- **清空**: 清除输入框和显示内容
+
+## 界面预览
+
+工具界面分为左右两部分：
+- **左侧 (1/3)**: 输入区域 + 事件序列列表
+- **右侧 (2/3)**: 可视化重建结果
+
+## 项目结构
+
+```
+sse-stream-inspector/
+├── App.tsx                 # 主应用组件
+├── components/
+│   ├── ChatHistory.tsx     # 对话历史组件
+│   ├── EventItem.tsx       # 事件项组件
+│   └── MessagePreview.tsx  # 消息预览组件
+├── services/
+│   └── sseParser.ts        # SSE 解析服务
+├── types.ts                # TypeScript 类型定义
+└── README.md               # 项目说明
+```
+
+## 最新更新
+
+### 2026-01-31
+- ✨ 界面全面中文化
+- 🐛 修复 msg.content 类型错误
+- 🎨 优化用户体验
+
+## 许可证
+
+MIT License
+
+## 相关链接
+
+- [AI Studio 项目](https://ai.studio/apps/drive/1pcBKUAXs0eTHvqKtj8Y5bc_wrvrbhY55)
